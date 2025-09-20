@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 import styles from "./Dashboard.module.css";
 import PcStatusLoader from "../../components/PcStatusLoader/PcStatusLoader";
 import ServiceModal from "../../components/ServiceModal/ServiceModal";
+import Toast from "../../components/Toast/Toast";
 
 type ServiceStatus = {
   state: "offline" | "starting" | "running";
@@ -20,10 +22,16 @@ type Service = {
 
 export default function Dashboard() {
   const { authFetch, logout } = useAuth();
+  const navigate = useNavigate();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Service | null>(null);
   const [showShutdownModal, setShowShutdownModal] = useState(false);
+
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error" | "info";
+  } | null>(null);
 
   useEffect(() => {
     async function loadServices() {
@@ -53,10 +61,12 @@ export default function Dashboard() {
         method: "POST",
       });
       if (!res.ok) throw new Error("Error al apagar el PC");
-      alert("🖥️ El PC se apagará en breve...");
+
+      logout();
+      navigate("/");
     } catch (err) {
       console.error(err);
-      alert("❌ No se pudo apagar el PC");
+      setToast({ message: "❌ No se pudo apagar el PC", type: "error" });
     } finally {
       setShowShutdownModal(false);
     }
@@ -73,6 +83,15 @@ export default function Dashboard() {
 
   return (
     <div className={styles.page}>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          duration={4000}
+          onClose={() => setToast(null)}
+        />
+      )}
+
       <div className={styles.header}>
         <h1 className={styles.title}>📊 Panel de Servicios</h1>
         <div className={styles.headerButtons}>
@@ -82,7 +101,14 @@ export default function Dashboard() {
           >
             ⏻ Apagar PC
           </button>
-          <button className={styles.logout} onClick={logout}>
+          <button
+            className={styles.logout}
+            onClick={() => {
+              logout();
+              setToast({ message: "🔒 Sesión cerrada", type: "info" });
+              navigate("/");
+            }}
+          >
             Cerrar sesión
           </button>
         </div>

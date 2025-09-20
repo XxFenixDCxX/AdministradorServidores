@@ -8,7 +8,7 @@ import {
 import { jwtDecode } from "jwt-decode";
 
 type JwtPayload = {
-  exp: number; // Expira en segundos UNIX
+  exp: number;
   name?: string;
   role?: string | string[];
 };
@@ -27,7 +27,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
 
-  // Recuperar token del storage al inicio
   useEffect(() => {
     const sToken = sessionStorage.getItem("token");
     if (sToken) {
