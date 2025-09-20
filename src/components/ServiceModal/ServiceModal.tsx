@@ -23,21 +23,18 @@ export default function ServiceModal({ service, onClose }: Props) {
   const [status, setStatus] = useState(service.status);
   const consoleRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll al final
   useEffect(() => {
     if (consoleRef.current) {
       consoleRef.current.scrollTop = consoleRef.current.scrollHeight;
     }
   }, [logs]);
 
-  // Poll de logs y estado
   useEffect(() => {
     if (status.state === "offline") return;
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL as string;
 
     const interval = setInterval(async () => {
-      // Logs
       const resLogs = await authFetch(
         `${backendUrl}/services/${service.id}/logs`
       );
@@ -46,7 +43,6 @@ export default function ServiceModal({ service, onClose }: Props) {
         setLogs(data);
       }
 
-      // Estado + jugadores
       const resStatus = await authFetch(
         `${backendUrl}/services/${service.id}/status`
       );
