@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import styles from "./Dashboard.module.css";
 import PcStatusLoader from "../../components/PcStatusLoader/PcStatusLoader";
+import ServiceModal from "../../components/ServiceModal/ServiceModal";
 
 type ServiceStatus = {
-  online: boolean;
+  state: "offline" | "starting" | "running";
   onlinePlayers: number;
   maxPlayers: number;
   playerNames: string[];
@@ -21,6 +22,7 @@ export default function Dashboard() {
   const { authFetch, logout } = useAuth();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState<Service | null>(null);
 
   useEffect(() => {
     async function loadServices() {
@@ -39,6 +41,8 @@ export default function Dashboard() {
     }
 
     loadServices();
+    const interval = setInterval(loadServices, 5000);
+    return () => clearInterval(interval);
   }, [authFetch, logout]);
 
   if (loading) {
@@ -64,11 +68,20 @@ export default function Dashboard() {
           <div
             key={service.id}
             className={`${styles.card} ${
-              service.status.online ? styles.online : styles.offline
+              service.status.state === "running"
+                ? styles.online
+                : service.status.state === "starting"
+                ? styles.starting
+                : styles.offline
             }`}
+            onClick={() => setSelected(service)}
           >
             <div className={styles.statusIcon}>
-              {service.status.online ? "🟢" : "🔴"}
+              {service.status.state === "running"
+                ? "🟢"
+                : service.status.state === "starting"
+                ? "🟡"
+                : "🔴"}
             </div>
             <div className={styles.cardContent}>
               <h2>{service.name}</h2>
@@ -76,34 +89,24 @@ export default function Dashboard() {
                 Estado:{" "}
                 <span
                   className={
-                    service.status.online
+                    service.status.state === "running"
                       ? styles.badgeOnline
+                      : service.status.state === "starting"
+                      ? styles.badgeStarting
                       : styles.badgeOffline
                   }
                 >
-                  {service.status.online ? "Online" : "Offline"}
+                  {service.status.state}
                 </span>
               </p>
-
-              {service.status.online && (
-                <>
-                  <p>
-                    Jugadores: {service.status.onlinePlayers} /{" "}
-                    {service.status.maxPlayers}
-                  </p>
-                  {service.status.playerNames.length > 0 && (
-                    <ul className={styles.playersList}>
-                      {service.status.playerNames.map((p) => (
-                        <li key={p}>{p}</li>
-                      ))}
-                    </ul>
-                  )}
-                </>
-              )}
             </div>
           </div>
         ))}
       </div>
+
+      {selected && (
+        <ServiceModal service={selected} onClose={() => setSelected(null)} />
+      )}
     </div>
   );
 }
