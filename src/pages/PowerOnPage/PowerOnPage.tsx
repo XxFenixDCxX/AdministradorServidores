@@ -44,7 +44,7 @@ export default function PowerOnPage() {
           });
           setLoading(false);
         } else {
-          navigate("/login");
+          navigate("/dashboard");
         }
       }, 15000);
     } catch {
@@ -54,7 +54,7 @@ export default function PowerOnPage() {
   }
 
   if (online) {
-    navigate("/prueba");
+    navigate("/dashboard");
   }
 
   return (

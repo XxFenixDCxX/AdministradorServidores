@@ -5,11 +5,11 @@ import "./index.css";
 import { registerSW } from "virtual:pwa-register";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
-import Prueba from "./pages/Prueba.tsx";
 import PowerOnPage from "./pages/PowerOnPage/PowerOnPage.tsx";
 import Login from "./pages/Login/Login.tsx";
 import AuthProtectedRoute from "./components/AuthProtectedRoute.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
+import Dashboard from "./pages/Dashboard/Dashboard.tsx";
 
 registerSW({
   onNeedRefresh() {
@@ -38,7 +38,7 @@ const router = createBrowserRouter([
       },
       {
         element: <AuthProtectedRoute />,
-        children: [{ path: "/prueba", element: <Prueba /> }],
+        children: [{ path: "/dashboard", element: <Dashboard /> }],
       },
     ],
   },

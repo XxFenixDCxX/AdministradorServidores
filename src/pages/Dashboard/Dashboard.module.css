@@ -1,0 +1,102 @@
+.page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1f2937, #111827);
+  padding: 2rem;
+  color: #fff;
+  font-family: system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.logout {
+  background: #ef4444;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.logout:hover {
+  background: #dc2626;
+}
+
+.cardsWrapper {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.statusIcon {
+  font-size: 2.5rem;
+}
+
+.cardContent h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.cardContent p {
+  margin: 0.4rem 0;
+}
+
+.online {
+  border-left: 6px solid #22c55e;
+}
+
+.offline {
+  border-left: 6px solid #ef4444;
+}
+
+.badgeOnline {
+  color: #22c55e;
+  font-weight: bold;
+}
+
+.badgeOffline {
+  color: #ef4444;
+  font-weight: bold;
+}
+
+.path {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}

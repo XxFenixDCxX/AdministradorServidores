@@ -16,7 +16,7 @@ export default function Login() {
     e.preventDefault();
     const ok = await login(username, password);
     if (ok) {
-      navigate("/prueba");
+      navigate("/dashboard");
     } else {
       setUsername("");
       setPassword("");
