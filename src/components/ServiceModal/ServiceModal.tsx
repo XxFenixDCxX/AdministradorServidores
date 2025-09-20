@@ -75,6 +75,7 @@ export default function ServiceModal({ service, onClose }: Props) {
       maxPlayers: 0,
       playerNames: [],
     });
+    onClose();
   }
 
   async function handleCommand(e: React.FormEvent) {
