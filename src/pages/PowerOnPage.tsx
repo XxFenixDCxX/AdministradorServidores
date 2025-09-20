@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { usePcStatus } from "../hooks/usePCStatus";
+import { usePcStatus } from "../hooks/usePcStatus";
+import PcStatusLoader from "../components/PcStatusLoader/PcStatusLoader";
 
 export default function PowerOnPage() {
   const [loading, setLoading] = useState(false);
@@ -41,7 +42,12 @@ export default function PowerOnPage() {
     navigate("/prueba");
   }
 
-  return (
+  return loading ? (
+    <PcStatusLoader
+      message="Encendiendo el servidor..."
+      subtitle="Por favor, espere."
+    />
+  ) : (
     <div
       style={{
         display: "flex",
@@ -63,7 +69,7 @@ export default function PowerOnPage() {
           cursor: "pointer",
         }}
       >
-        {loading ? "Encendiendo..." : "Encender PC"}
+        {"Encender PC"}
       </button>
     </div>
   );

@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { usePcStatus } from "../hooks/usePCStatus";
+import { usePcStatus } from "../hooks/usePcStatus";
+import PcStatusLoader from "./PcStatusLoader/PcStatusLoader";
 
 type Props = {
   pingUrl: string;
@@ -9,7 +10,12 @@ export default function ProtectedRoute({ pingUrl }: Props) {
   const online = usePcStatus(pingUrl);
 
   if (online === null) {
-    return <p>Comprobando estado del PC...</p>;
+    return (
+      <PcStatusLoader
+        message="Comprobando estado del servidor..."
+        subtitle="Por favor, espere."
+      />
+    );
   }
 
   if (!online) {
