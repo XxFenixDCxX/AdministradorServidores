@@ -7,7 +7,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Prueba from "./pages/Prueba.tsx";
 import PowerOnPage from "./pages/PowerOnPage/PowerOnPage.tsx";
-import Login from "./components/Login/Login.tsx";
+import Login from "./pages/Login/Login.tsx";
 import AuthProtectedRoute from "./components/AuthProtectedRoute.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
 
