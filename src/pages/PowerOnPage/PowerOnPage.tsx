@@ -44,7 +44,7 @@ export default function PowerOnPage() {
           });
           setLoading(false);
         } else {
-          navigate("/dashboard");
+          navigate("/login");
         }
       }, 15000);
     } catch {

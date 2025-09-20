@@ -7,6 +7,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Prueba from "./pages/Prueba.tsx";
 import PowerOnPage from "./pages/PowerOnPage/PowerOnPage.tsx";
+import Login from "./components/Login/Login.tsx";
+import AuthProtectedRoute from "./components/AuthProtectedRoute.tsx";
+import { AuthProvider } from "./context/AuthContext.tsx";
 
 registerSW({
   onNeedRefresh() {
@@ -30,8 +33,12 @@ const router = createBrowserRouter([
     element: <ProtectedRoute pingUrl={`${backendUrl}/health`} />,
     children: [
       {
-        path: "/prueba",
-        element: <Prueba />,
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        element: <AuthProtectedRoute />,
+        children: [{ path: "/prueba", element: <Prueba /> }],
       },
     ],
   },
@@ -39,6 +46,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );
