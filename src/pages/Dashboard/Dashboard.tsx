@@ -23,6 +23,7 @@ export default function Dashboard() {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Service | null>(null);
+  const [showShutdownModal, setShowShutdownModal] = useState(false);
 
   useEffect(() => {
     async function loadServices() {
@@ -45,6 +46,22 @@ export default function Dashboard() {
     return () => clearInterval(interval);
   }, [authFetch, logout]);
 
+  async function handleShutdown() {
+    const backendUrl = import.meta.env.VITE_BACKEND_URL as string;
+    try {
+      const res = await authFetch(`${backendUrl}/system/shutdown`, {
+        method: "POST",
+      });
+      if (!res.ok) throw new Error("Error al apagar el PC");
+      alert("🖥️ El PC se apagará en breve...");
+    } catch (err) {
+      console.error(err);
+      alert("❌ No se pudo apagar el PC");
+    } finally {
+      setShowShutdownModal(false);
+    }
+  }
+
   if (loading) {
     return (
       <PcStatusLoader
@@ -58,9 +75,17 @@ export default function Dashboard() {
     <div className={styles.page}>
       <div className={styles.header}>
         <h1 className={styles.title}>📊 Panel de Servicios</h1>
-        <button className={styles.logout} onClick={logout}>
-          Cerrar sesión
-        </button>
+        <div className={styles.headerButtons}>
+          <button
+            className={styles.shutdown}
+            onClick={() => setShowShutdownModal(true)}
+          >
+            ⏻ Apagar PC
+          </button>
+          <button className={styles.logout} onClick={logout}>
+            Cerrar sesión
+          </button>
+        </div>
       </div>
 
       <div className={styles.cardsWrapper}>
@@ -106,6 +131,26 @@ export default function Dashboard() {
 
       {selected && (
         <ServiceModal service={selected} onClose={() => setSelected(null)} />
+      )}
+
+      {showShutdownModal && (
+        <div className={styles.overlay}>
+          <div className={styles.shutdownModal}>
+            <h2>⚠️ Confirmar apagado</h2>
+            <p>¿Seguro que quieres apagar el servidor?</p>
+            <div className={styles.modalActions}>
+              <button
+                className={styles.cancel}
+                onClick={() => setShowShutdownModal(false)}
+              >
+                Cancelar
+              </button>
+              <button className={styles.confirm} onClick={handleShutdown}>
+                ⏻ Apagar
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

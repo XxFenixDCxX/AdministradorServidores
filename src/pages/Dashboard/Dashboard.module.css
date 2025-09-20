@@ -18,13 +18,9 @@
 }
 
 .logout {
-  padding: 0.6rem 1.2rem;
-  background: #ef4444;
-  border: none;
-  border-radius: 0.4rem;
-  color: white;
-  cursor: pointer;
-  font-weight: bold;
+  background: #475569;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.8rem;
 }
 
 .logout:hover {
@@ -97,4 +93,74 @@
 
 .offline {
   border-color: #ef4444;
+}
+
+.headerButtons {
+  display: flex;
+  gap: 1rem;
+}
+
+.shutdown {
+  background: #ef4444;
+  font-size: 1rem;
+  padding: 0.6rem 1.2rem;
+}
+
+.shutdown:hover {
+  background: #dc2626;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+}
+
+.shutdownModal {
+  background: #1e293b;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 400px;
+  text-align: center;
+  color: #f8fafc;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+}
+
+.modalActions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+  gap: 1rem;
+}
+
+.cancel {
+  background: #64748b;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cancel:hover {
+  background: #475569;
+}
+
+.confirm {
+  background: #ef4444;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 0.3rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.confirm:hover {
+  background: #dc2626;
 }
