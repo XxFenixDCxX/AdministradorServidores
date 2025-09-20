@@ -1,9 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
 import "./index.css";
 
 import { registerSW } from "virtual:pwa-register";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import Prueba from "./pages/Prueba.tsx";
+import PowerOnPage from "./pages/PowerOnPage.tsx";
 
 registerSW({
   onNeedRefresh() {
@@ -16,8 +19,26 @@ registerSW({
   },
 });
 
+const backendUrl = import.meta.env.VITE_BACKEND_URL as string;
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <PowerOnPage />,
+  },
+  {
+    element: <ProtectedRoute pingUrl={`${backendUrl}/health`} />,
+    children: [
+      {
+        path: "/prueba",
+        element: <Prueba />,
+      },
+    ],
+  },
+]);
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
