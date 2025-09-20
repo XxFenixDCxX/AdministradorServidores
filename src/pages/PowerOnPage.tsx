@@ -2,9 +2,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePcStatus } from "../hooks/usePcStatus";
 import PcStatusLoader from "../components/PcStatusLoader/PcStatusLoader";
+import Toast from "../components/Toast/Toast";
 
 export default function PowerOnPage() {
   const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState<{
+    message: string;
+    type: "success" | "error" | "info" | "warning";
+  } | null>(null);
+
   const navigate = useNavigate();
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL as string;
@@ -14,7 +20,7 @@ export default function PowerOnPage() {
   async function handlePowerOn() {
     setLoading(true);
     try {
-      await fetch(`${backendWolUrl}/wol`, {
+      const res = await fetch(`${backendWolUrl}/wol`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -27,13 +33,21 @@ export default function PowerOnPage() {
         }),
       });
 
+      if (!res.ok) throw new Error("Error en el servidor WOL");
+
       setTimeout(() => {
-        if (online) {
+        if (!online) {
+          setToast({
+            message: "No se pudo encender el servidor",
+            type: "error",
+          });
+          setLoading(false);
+        } else {
           navigate("/dashboard");
         }
       }, 15000);
-    } catch (err) {
-      console.error("Error al encender el PC:", err);
+    } catch {
+      setToast({ message: "Error al encender el servidor", type: "error" });
       setLoading(false);
     }
   }
@@ -42,35 +56,48 @@ export default function PowerOnPage() {
     navigate("/prueba");
   }
 
-  return loading ? (
-    <PcStatusLoader
-      message="Encendiendo el servidor..."
-      subtitle="Por favor, espere."
-    />
-  ) : (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      <button
-        onClick={handlePowerOn}
-        disabled={loading}
-        style={{
-          fontSize: "2rem",
-          padding: "1rem 2rem",
-          borderRadius: "1rem",
-          backgroundColor: "#0d6efd",
-          color: "white",
-          border: "none",
-          cursor: "pointer",
-        }}
-      >
-        {"Encender PC"}
-      </button>
-    </div>
+  return (
+    <>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          duration={4000}
+          onClose={() => setToast(null)}
+        />
+      )}
+      {loading ? (
+        <PcStatusLoader
+          message="Encendiendo el servidor..."
+          subtitle="Por favor, espere."
+        />
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
+          <button
+            onClick={handlePowerOn}
+            disabled={loading}
+            style={{
+              fontSize: "2rem",
+              padding: "1rem 2rem",
+              borderRadius: "1rem",
+              backgroundColor: "#0d6efd",
+              color: "white",
+              border: "none",
+              cursor: "pointer",
+            }}
+          >
+            {"Encender PC"}
+          </button>
+        </div>
+      )}
+      ;
+    </>
   );
 }
