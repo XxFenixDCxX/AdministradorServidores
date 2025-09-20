@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import Toast from "../../components/Toast/Toast";
+
+import styles from "./Login.module.css";
 
 export default function Login() {
   const { login } = useAuth();
@@ -12,42 +15,47 @@ export default function Login() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const ok = await login(username, password);
-    if (ok) navigate("/prueba");
-    else setError("Usuario o contraseña incorrectos");
+    if (ok) {
+      navigate("/prueba");
+    } else {
+      setUsername("");
+      setPassword("");
+      setError("Usuario o contraseña incorrectos");
+    }
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
-      }}
-    >
-      <form
-        onSubmit={handleSubmit}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
-          width: "300px",
-        }}
-      >
-        <h2>Iniciar sesión</h2>
-        {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className={styles.page}>
+      {error && (
+        <Toast
+          message={error}
+          type="error"
+          duration={4000}
+          onClose={() => setError(null)}
+        />
+      )}
+
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <h2 className={styles.title}>🔐 Iniciar sesión</h2>
+
         <input
           placeholder="Usuario"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          className={styles.input}
         />
+
         <input
           placeholder="Contraseña"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className={styles.input}
         />
-        <button type="submit">Entrar</button>
+
+        <button type="submit" className={styles.button}>
+          Entrar
+        </button>
       </form>
     </div>
   );
