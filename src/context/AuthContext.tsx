@@ -5,30 +5,43 @@ import {
   type ReactNode,
   useEffect,
 } from "react";
+import { jwtDecode } from "jwt-decode";
+
+type JwtPayload = {
+  exp: number; // Expira en segundos UNIX
+  name?: string;
+  role?: string | string[];
+};
 
 type AuthContextType = {
-  user: string | null;
-  roles: string[];
   token: string | null;
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
   authFetch: (input: RequestInfo, init?: RequestInit) => Promise<Response>;
+  isTokenValid: () => boolean;
+  getUserInfo: () => { username: string | null; roles: string[] };
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<string | null>(null);
-  const [roles, setRoles] = useState<string[]>([]);
   const [token, setToken] = useState<string | null>(null);
 
+  // Recuperar token del storage al inicio
   useEffect(() => {
-    const sUser = sessionStorage.getItem("user");
-    const sRoles = sessionStorage.getItem("roles");
     const sToken = sessionStorage.getItem("token");
-    if (sUser) setUser(sUser);
-    if (sRoles) setRoles(JSON.parse(sRoles));
-    if (sToken) setToken(sToken);
+    if (sToken) {
+      try {
+        const decoded = jwtDecode<JwtPayload>(sToken);
+        if (decoded.exp * 1000 > Date.now()) {
+          setToken(sToken);
+        } else {
+          logout();
+        }
+      } catch {
+        logout();
+      }
+    }
   }, []);
 
   async function login(username: string, password: string) {
@@ -39,17 +52,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
       });
+
       if (!res.ok) return false;
-
       const data = await res.json();
-      setUser(data.username);
-      setRoles(data.roles || []);
-      setToken(data.token);
 
-      sessionStorage.setItem("user", data.username);
-      sessionStorage.setItem("roles", JSON.stringify(data.roles || []));
       sessionStorage.setItem("token", data.token);
-
+      setToken(data.token);
       return true;
     } catch {
       return false;
@@ -57,10 +65,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   function logout() {
-    setUser(null);
-    setRoles([]);
     setToken(null);
-    sessionStorage.clear();
+    sessionStorage.removeItem("token");
   }
 
   async function authFetch(input: RequestInfo, init?: RequestInit) {
@@ -70,9 +76,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return fetch(input, { ...init, headers });
   }
 
+  function isTokenValid() {
+    if (!token) return false;
+    try {
+      const decoded = jwtDecode<JwtPayload>(token);
+      return decoded.exp * 1000 > Date.now();
+    } catch {
+      return false;
+    }
+  }
+
+  function getUserInfo() {
+    if (!token) return { username: null, roles: [] };
+    try {
+      const decoded = jwtDecode<JwtPayload>(token);
+      const username = decoded.name || null;
+      const roles = Array.isArray(decoded.role)
+        ? decoded.role
+        : decoded.role
+        ? [decoded.role]
+        : [];
+      return { username, roles };
+    } catch {
+      return { username: null, roles: [] };
+    }
+  }
+
   return (
     <AuthContext.Provider
-      value={{ user, roles, token, login, logout, authFetch }}
+      value={{ token, login, logout, authFetch, isTokenValid, getUserInfo }}
     >
       {children}
     </AuthContext.Provider>
