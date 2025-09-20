@@ -1,0 +1,51 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #111827;
+}
+
+.powerButton {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: none;
+  background: radial-gradient(circle at 30% 30%, #0d6efd, #084298);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 0 30px rgba(13, 110, 253, 0.6);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.powerButton:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 40px rgba(13, 110, 253, 0.9);
+}
+
+.powerButton:active {
+  transform: scale(0.95);
+}
+
+.icon {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border: 6px solid white;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.icon::before {
+  content: "";
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 20px;
+  background: white;
+  border-radius: 3px;
+}

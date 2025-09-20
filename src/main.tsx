@@ -6,7 +6,7 @@ import { registerSW } from "virtual:pwa-register";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import Prueba from "./pages/Prueba.tsx";
-import PowerOnPage from "./pages/PowerOnPage.tsx";
+import PowerOnPage from "./pages/PowerOnPage/PowerOnPage.tsx";
 
 registerSW({
   onNeedRefresh() {

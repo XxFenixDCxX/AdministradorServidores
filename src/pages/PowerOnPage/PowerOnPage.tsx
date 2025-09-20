@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { usePcStatus } from "../hooks/usePcStatus";
-import PcStatusLoader from "../components/PcStatusLoader/PcStatusLoader";
-import Toast from "../components/Toast/Toast";
+import { usePcStatus } from "../../hooks/usePcStatus";
+import PcStatusLoader from "../../components/PcStatusLoader/PcStatusLoader";
+import Toast from "../../components/Toast/Toast";
+import styles from "./PowerOnPage.module.css";
 
 export default function PowerOnPage() {
   const [loading, setLoading] = useState(false);
@@ -72,32 +73,16 @@ export default function PowerOnPage() {
           subtitle="Por favor, espere."
         />
       ) : (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100vh",
-          }}
-        >
+        <div className={styles.container}>
           <button
+            className={styles.powerButton}
             onClick={handlePowerOn}
             disabled={loading}
-            style={{
-              fontSize: "2rem",
-              padding: "1rem 2rem",
-              borderRadius: "1rem",
-              backgroundColor: "#0d6efd",
-              color: "white",
-              border: "none",
-              cursor: "pointer",
-            }}
           >
-            {"Encender PC"}
+            <span className={styles.icon}></span>
           </button>
         </div>
       )}
-      ;
     </>
   );
 }
