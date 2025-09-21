@@ -107,7 +107,3 @@ Para probar el build localmente:
 ```bash
 pnpm preview
 ```
-
-```
-
-```
