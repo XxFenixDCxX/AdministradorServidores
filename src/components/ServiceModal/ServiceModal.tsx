@@ -6,6 +6,7 @@ type Props = {
   service: {
     id: string;
     name: string;
+    host: string;
     status: {
       state: "offline" | "starting" | "running";
       onlinePlayers: number;
@@ -100,6 +101,7 @@ export default function ServiceModal({ service, onClose }: Props) {
         </button>
 
         <h2 className={styles.title}>{service.name}</h2>
+        <p className={styles.subtitle}>IP: {service.host}</p>
 
         {status.state === "offline" ? (
           <div className={styles.centered}>

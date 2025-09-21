@@ -163,3 +163,12 @@
 .confirm:hover {
   background: #dc2626;
 }
+
+.badgeIp {
+  background: #222;
+  color: #0f0;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-family: monospace;
+}

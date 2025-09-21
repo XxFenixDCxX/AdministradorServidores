@@ -17,6 +17,7 @@ type Service = {
   id: string;
   name: string;
   path: string;
+  host: string;
   status: ServiceStatus;
 };
 
@@ -136,6 +137,9 @@ export default function Dashboard() {
             </div>
             <div className={styles.cardContent}>
               <h2>{service.name}</h2>
+              <p>
+                IP: <span className={styles.badgeIp}>{service.host}</span>
+              </p>
               <p>
                 Estado:{" "}
                 <span
