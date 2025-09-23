@@ -46,7 +46,7 @@ export default function PowerOnPage() {
         } else {
           navigate("/dashboard");
         }
-      }, 15000);
+      }, 30000);
     } catch {
       setToast({ message: "Error al encender el servidor", type: "error" });
       setLoading(false);

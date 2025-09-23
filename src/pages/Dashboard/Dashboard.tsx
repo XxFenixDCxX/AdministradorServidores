@@ -27,6 +27,7 @@ export default function Dashboard() {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Service | null>(null);
+  const [loagingOut, setLoggingOut] = useState(false);
   const [showShutdownModal, setShowShutdownModal] = useState(false);
 
   const [toast, setToast] = useState<{
@@ -63,8 +64,12 @@ export default function Dashboard() {
       });
       if (!res.ok) throw new Error("Error al apagar el PC");
 
-      logout();
-      navigate("/");
+      setLoggingOut(true);
+
+      setTimeout(() => {
+        setLoggingOut(false);
+        navigate("/");
+      }, 20000);
     } catch (err) {
       console.error(err);
       setToast({ message: "❌ No se pudo apagar el PC", type: "error" });
@@ -73,10 +78,12 @@ export default function Dashboard() {
     }
   }
 
-  if (loading) {
+  if (loading || loagingOut) {
     return (
       <PcStatusLoader
-        message="Cargando servicios..."
+        message={
+          loagingOut ? "Apagando el servidor..." : "Cargando servicios..."
+        }
         subtitle="Por favor, espere."
       />
     );
