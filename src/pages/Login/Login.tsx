@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import Toast from "../../components/Toast/Toast";
@@ -6,11 +6,17 @@ import Toast from "../../components/Toast/Toast";
 import styles from "./Login.module.css";
 
 export default function Login() {
-  const { login } = useAuth();
+  const { login, isTokenValid } = useAuth();
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isTokenValid()) {
+      navigate("/dashboard");
+    }
+  }, [isTokenValid, navigate]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
